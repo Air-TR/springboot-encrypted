@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.tr</groupId>
+    <artifactId>springboot-encrypted</artifactId>
+    <version>1.0</version>
+    <name>springboot-encrypted</name>
+    <description>springboot-encrypted</description>
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <!--
+                    1.加密后，方法体被清空，保留方法参数、注解等信息.主要兼容 swagger 文档注解扫描
+                    2.方法体被清空后，反编译只能看到方法名和注解，看不到方法体的具体内容
+                    3.加密后的项目需要设置 javaagent 来启动，启动过程中解密 class，完全内存解密，不留下任何解密后的文件
+                    4.启动加密后的 jar，生成 xxx-encrypted.jar，这个就是加密后的 jar 文件，加密后不可直接执行
+                    5.无密码启动方式，java -javaagent:xxx-encrypted.jar -jar xxx-encrypted.jar
+                    6.有密码启动方式，java -javaagent:xxx-encrypted.jar='-pwd= 密码' -jar xxx-encrypted.jar
+                -->
+                <groupId>net.roseboy</groupId>
+                <artifactId>classfinal-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <password>#</password> <!-- # 表示不需要启动密码，这个密码对代码混淆不产生作用，只是一个启动密码（加密打包后 pom.xml 会被删除，不用担心在 jar 包里找到此密码） -->
+                    <packages>com.tr.springboot.encrypted,com.huibo.license</packages> <!-- 需要加密的包名，多个用英文逗号分隔 -->
+                    <cfgfiles>application.yaml,application-dev.yaml</cfgfiles> <!-- 需要加密的配置文件，多个用英文逗号分隔 -->
+                    <libjars>license-2.2.0.jar</libjars> <!-- lib 下需要加密的依赖 jar，多个用英文逗号分隔 -->
+                    <excludes>org.spring</excludes>
+                    <code></code> <!-- 机器码，指定机器启动，可不填 -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>classFinal</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
