@@ -60,12 +60,12 @@
                 <artifactId>classfinal-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <password>#</password> <!-- # 表示不需要启动密码，这个密码对代码混淆不产生作用，只是一个启动密码（加密打包后 pom.xml 会被删除，不用担心在 jar 包里找到此密码） -->
-                    <packages>com.tr.springboot.encrypted,com.huibo.license</packages> <!-- 需要加密的包名，多个用英文逗号分隔 -->
-                    <cfgfiles>application.yaml,application-dev.yaml</cfgfiles> <!-- 需要加密的配置文件，多个用英文逗号分隔 -->
-                    <libjars>license-2.2.0.jar</libjars> <!-- lib 下需要加密的依赖 jar，多个用英文逗号分隔 -->
+                    <password>#</password> <!-- # 表示不需要启动密码，这个密码不对代码混淆产生作用，只是一个启动密码（加密打包后 pom.xml 会被删除，不用担心在 jar 包里找到此密码） -->
+                    <packages>com.tr.springboot.encrypted,com.huibo.license</packages> <!-- 需要加密的包名，多个用 "," 分隔 -->
+                    <cfgfiles>application.yaml,application-dev.yaml</cfgfiles> <!-- 需要加密的配置文件，多个用 "," 分隔 -->
+                    <libjars>license-2.2.0.jar</libjars> <!-- lib 下需要加密的依赖 jar，多个用 "," 分隔 -->
                     <excludes>org.spring</excludes>
-                    <code></code> <!-- 机器码，指定机器启动，可不填 -->
+                    <code></code> <!-- 机器码，在绑定的机器生成，加密后只可在此机器上运行，可不填 -->
                 </configuration>
                 <executions>
                     <execution>
